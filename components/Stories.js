@@ -30,7 +30,6 @@ const Stories = () => {
 
   useEffect(() => {
     const suggestions = USERS
-    console.log(suggestions);
     setSuggestions(suggestions)
   }, []);
 

@@ -27,7 +27,6 @@ function Suggestions() {
         setSuggestions(suggestions);
     }, [])
 
-    console.log('sug', suggestions);
     return (
         <div className='mt-4 ml-10'>
             <div className='flex justify-between text-sm mb-5' >
