@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Story from './Story'
 import { faker } from '@faker-js/faker';
+import { useSession } from 'next-auth/react';
 
 export const USERS = [];
 
@@ -23,6 +24,8 @@ Array.from({ length: 20 }).forEach(() => {
 
 const Stories = () => {
 
+  const { data: session } = useSession();
+
   const [suggestions, setSuggestions] = useState([])
 
   useEffect(() => {
@@ -33,6 +36,12 @@ const Stories = () => {
 
   return (
     <div className='flex space-x-2 p-6 mt-8 bg-white border-gray-200 border rounded-sm overflow-x-scroll scrollbar-thin scrollbar-thumb-black' >
+      {session && (
+        <Story
+          img={session.user?.image}
+          username={session.user?.username}
+        />
+      )}
       {suggestions.map(profile => (
         <Story
           key={profile.id}
