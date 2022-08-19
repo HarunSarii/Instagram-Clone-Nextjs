@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useRef, useState } from 'react'
 import { useRecoilState } from 'recoil';
 import { modalState } from '../atoms/modalAtom';
 import { Dialog, Transition } from '@headlessui/react';
@@ -7,7 +7,19 @@ import { CameraIcon } from '@heroicons/react/outline';
 
 const Modal = () => {
   const [open, setOpen] = useRecoilState(modalState);
-  console.log('opennn', open);
+  const filePicker = useRef(null);
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  const addImageToPost = (e) => {
+    const reader = new FileReader();
+    if (e.target.files[0]) {
+      reader.readAsDataURL(e.target.files[0])
+    };
+    reader.onload = (readerEvent) => {
+      setSelectedFile(readerEvent.target.result);
+    }
+  }
+
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog
@@ -47,14 +59,23 @@ const Modal = () => {
             <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden
                             shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6">
               <div>
-                <div
-                  className='mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 cursor-pointer'
-                >
-                  <CameraIcon
-                    className='h-6 w-6 text-red-600'
-                    aria-hidden='true'
-                  />
-                </div>
+
+                {selectedFile ? (
+                  <img
+                    src={selectedFile}
+                    className='w-full object-contain cursor-pointer'
+                    onClick={() => setSelectedFile(null)} />
+                ) : (
+                  <div
+                    onClick={() => filePicker.current.click()}
+                    className='mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 cursor-pointer'
+                  >
+                    <CameraIcon
+                      className='h-6 w-6 text-red-600'
+                      aria-hidden='true'
+                    />
+                  </div>
+                )}
                 <div>
                   <div className='mt-3 text-center sm:mt-5' >
                     <Dialog.Title
@@ -65,8 +86,10 @@ const Modal = () => {
                     </Dialog.Title>
                     <div>
                       <input
+                        ref={filePicker}
                         type='file'
                         hidden
+                        onChange={addImageToPost}
                       />
                     </div>
                     <div>
