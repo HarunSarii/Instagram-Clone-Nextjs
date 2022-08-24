@@ -3,6 +3,7 @@ import { BookmarkIcon, ChatIcon, DotsHorizontalIcon, EmojiHappyIcon, HeartIcon, 
 import { useSession } from 'next-auth/react'
 import { addDoc, collection, onSnapshot, orderBy, query, serverTimestamp } from 'firebase/firestore';
 import { db } from '../firebase';
+import Moment from 'react-moment'
 
 
 function Post({ id, username, userImg, img, caption }) {
@@ -79,6 +80,9 @@ function Post({ id, username, userImg, img, caption }) {
                                 </span>
                                 {item.data().comment}
                             </p>
+                            <Moment fromNow className='pr-5 text-xs'>
+                                {item.data().timestamp?.toDate()}
+                            </Moment>
                         </div>
                     ))}
                 </div>
