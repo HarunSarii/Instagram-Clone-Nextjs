@@ -12,15 +12,14 @@ import { getDownloadURL, ref, uploadString } from 'firebase/storage';
 const Modal = () => {
   const { data: session } = useSession();
   const [open, setOpen] = useRecoilState(modalState);
-  const filePicker = useRef(null);
+  const filePickerRef = useRef(null);
   const captionRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
 
   const uploadPost = async () => {
-    if (loading) {
-      return null;
-    }
+    if (loading) return;
+
     setLoading(true);
 
     const docRef = await addDoc(collection(db, 'posts'), {
@@ -30,17 +29,17 @@ const Modal = () => {
       timestamp: serverTimestamp()
     })
 
-    console.log('doc', docRef);
+    console.log('new doc added with id', docRef.id);
 
     const imageRef = ref(storage, `posts/${docRef.id}/image`);
 
-    await uploadString(imageRef, selectedFile, "data_url").then(async snapshot => {
-      const downloadURL = await getDownloadURL(imageRef);
+    await uploadString(imageRef, selectedFile, "data_url").then( async snapshot => {
+        const downloadURL = await getDownloadURL(imageRef);
 
-      await updateDoc(doc(db, 'posts', docRef.id), {
-        image: downloadURL
+        await updateDoc(doc(db, "posts", docRef.id), {
+          image: downloadURL,
+        })
       })
-    })
 
     setOpen(false);
     setLoading(false);
@@ -105,7 +104,7 @@ const Modal = () => {
                     onClick={() => setSelectedFile(null)} />
                 ) : (
                   <div
-                    onClick={() => filePicker.current.click()}
+                    onClick={() => filePickerRef.current.click()}
                     className='mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 cursor-pointer'
                   >
                     <CameraIcon
@@ -124,7 +123,7 @@ const Modal = () => {
                     </Dialog.Title>
                     <div>
                       <input
-                        ref={filePicker}
+                        ref={filePickerRef}
                         type='file'
                         hidden
                         onChange={addImageToPost}
@@ -142,7 +141,7 @@ const Modal = () => {
                 </div>
                 <div className='mt-5 sm:mt-6'>
                   <button
-                  disabled={!selectedFile}
+                    disabled={!selectedFile}
                     type="button"
                     className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm
                                 px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none
