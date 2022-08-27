@@ -1,3 +1,8 @@
+Screen gif:
+
+![Screen_Recording_2022-08-27_at_13_48_38_AdobeExpress](https://user-images.githubusercontent.com/75949382/187027244-0a2815eb-ce62-4e4c-aa5c-c4e555561169.gif)
+
+
 # Next.js + Tailwind CSS Example
 
 This example shows how to use [Tailwind CSS](https://tailwindcss.com/) [(v3.0)](https://tailwindcss.com/blog/tailwindcss-v3) with Next.js. It follows the steps outlined in the official [Tailwind docs](https://tailwindcss.com/docs/guides/nextjs).
